@@ -13,8 +13,8 @@ Created on Sep 9, 2014
 # import sys
 # sys.path.append("..")
 # 
-# from EcarCore.MDPfunc import *
-# from EcarCore.header import *
+# from RADDCore.MDPfunc import *
+# from RADDCore.header import *
 # 
 # ############################################
 # # PARAMETERS
@@ -147,8 +147,8 @@ import timeit
 import sys
 sys.path.append("..")
 
-from EcarCore.MDPfunc import *
-from EcarCore.header import *
+from RADDCore.MDPfunc import *
+from RADDCore.header import *
 
 ############################################
 # PARAMETERS

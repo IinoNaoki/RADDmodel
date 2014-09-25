@@ -13,23 +13,23 @@ import timeit
 import sys
 sys.path.append("..")
 
-from EcarCore.MDPfunc import *
-from EcarCore.header import *
+from RADDCore.MDPfunc import *
+from RADDCore.header import *
 
 ############################################
 # PARAMETERS
 ############################################
 L = 3
 # left blank purposely for E
-# N Calculated from LAM and R_COVERAGE
+N = 1 + 10
 P = 3
 A = 3
 L_NC, L_B, L_S = [0], [1], [2]
 E_B, E_S = 1, 1
 GAM = 0.95
 DELTA = 0.01
-LAM = 0.005
-R_COVERAGE = 10.0
+# LAM = 0.005
+# R_COVERAGE = 10.0
 ############################################
 
 
@@ -54,13 +54,12 @@ tic = timeit.default_timer()
 for ind, e_cur in enumerate(E_list):
     print "---- ROUND:", ind+1,
     print "out of", expnum
-    N = GetUpperboundN(LAM, R_COVERAGE)[0]
+#     N = GetUpperboundN(LAM, R_COVERAGE)[0]
     ParamsSet[ind] = {'L': L, 'E': e_cur, 'N': N, 'P': P, \
                       'A': A, \
                       'L_NC': L_NC, 'L_B': L_B, 'L_S': L_S, \
                       'E_B': E_B, 'E_S': E_S, \
-                      'GAM': GAM, 'DELTA': DELTA, \
-                      'LAM': LAM, 'R_COVERAGE': R_COVERAGE
+                      'GAM': GAM, 'DELTA': DELTA
                       }
     TransProbSet[ind] = BuildTransMatrix_Para(ParamsSet[ind])
     

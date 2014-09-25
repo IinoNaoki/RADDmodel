@@ -12,18 +12,18 @@ from matplotlib.ticker import FuncFormatter
 from matplotlib.transforms import Bbox
 import sys
 sys.path.append("..")
-from EcarCore.MDPfunc import *
+from RADDCore.MDPfunc import *
 
 from matplotlib.backends.backend_pdf import PdfPages
 
-expnum = pickle.load(open("../results/LAM_changing/expnum","r"))
+expnum = pickle.load(open("../results/N_changing/expnum","r"))
 
-x_axis_list = pickle.load(open("../results/LAM_changing/xaxis","r"))
-RESset_bell = pickle.load(open("../results/LAM_changing/bell","r"))
-RESset_myo = pickle.load(open("../results/LAM_changing/myo","r"))
-RESset_side = pickle.load(open("../results/LAM_changing/side","r"))
-RESset_rnd = pickle.load(open("../results/LAM_changing/rnd","r"))
-RESset_sidernd = pickle.load(open("../results/LAM_changing/sidernd","r"))
+x_axis_list = pickle.load(open("../results/N_changing/xaxis","r"))
+RESset_bell = pickle.load(open("../results/N_changing/bell","r"))
+RESset_myo = pickle.load(open("../results/N_changing/myo","r"))
+RESset_side = pickle.load(open("../results/N_changing/side","r"))
+RESset_rnd = pickle.load(open("../results/N_changing/rnd","r"))
+RESset_sidernd = pickle.load(open("../results/N_changing/sidernd","r"))
 
 #
 # FORMAT X AXIS

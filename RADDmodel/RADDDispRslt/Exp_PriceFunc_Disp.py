@@ -12,7 +12,7 @@ from matplotlib.ticker import FuncFormatter
 from matplotlib.transforms import Bbox
 import sys
 sys.path.append("..")
-from EcarCore.MDPfunc import *
+from RADDCore.MDPfunc import *
 
 from matplotlib.backends.backend_pdf import PdfPages
 

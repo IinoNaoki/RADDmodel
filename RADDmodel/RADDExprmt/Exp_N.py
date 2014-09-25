@@ -13,15 +13,15 @@ import timeit
 import sys
 sys.path.append("..")
 
-from EcarCore.MDPfunc import *
-from EcarCore.header import *
+from RADDCore.MDPfunc import *
+from RADDCore.header import *
 
 ############################################
 # PARAMETERS
 ############################################
 L = 3
 E = 1 + 5 #6 elements: {0, 1,2,3,4,5}
-# N Calculated from LAM and R_COVERAGE
+# N Changes later
 P = 3
 A = 3
 L_NC, L_B, L_S = [0], [1], [2]
@@ -29,13 +29,13 @@ E_B, E_S = 1, 1
 GAM = 0.95
 DELTA = 0.01
 # left blank purposely for LAM
-R_COVERAGE = 10.0
 ############################################
 
 
-LAM_list = [0.001,0.002,0.003,0.004,0.005,0.006,0.007,0.008,0.009, 0.01]
+# LAM_list = [0.001,0.002,0.003,0.004,0.005,0.006,0.007,0.008,0.009, 0.01]
+N_list = [1,2,3,4,5,6,7,8,9,10]
 # LAM_list = [0.000, 0.001,0.002]
-expnum = len(LAM_list)
+expnum = len(N_list)
 
 ParamsSet = [None for _ in range(expnum)]
 TransProbSet = [None for _ in range(expnum)]
@@ -51,16 +51,14 @@ A_opt_set_bell = [None for _ in range(expnum)]
 
 tic = timeit.default_timer()
 
-for ind, lam_cur in enumerate(LAM_list):
+for ind, n_cur in enumerate(N_list):
     print "---- ROUND:", ind+1,
     print "out of", expnum
-    N = GetUpperboundN(lam_cur, R_COVERAGE)[0]
-    ParamsSet[ind] = {'L': L, 'E': E, 'N': N, 'P': P, \
+    ParamsSet[ind] = {'L': L, 'E': E, 'N': n_cur, 'P': P, \
                       'A': A, \
                       'L_NC': L_NC, 'L_B': L_B, 'L_S': L_S, \
                       'E_B': E_B, 'E_S': E_S, \
-                      'GAM': GAM, 'DELTA': DELTA, \
-                      'LAM': lam_cur, 'R_COVERAGE': R_COVERAGE
+                      'GAM': GAM, 'DELTA': DELTA
                       }
     TransProbSet[ind] = BuildTransMatrix_Para(ParamsSet[ind])
     
@@ -114,14 +112,14 @@ print "Total time spent: ",
 print toc - tic
     
 print "Dumping...",
-pickle.dump(expnum, open("../results/LAM_changing/expnum","w"))
-pickle.dump(ParamsSet, open("../results/LAM_changing/Paramsset","w"))
-pickle.dump(LAM_list, open("../results/LAM_changing/xaxis","w"))
-pickle.dump(RESset_bell, open("../results/LAM_changing/bell","w"))
-pickle.dump(RESset_myo, open("../results/LAM_changing/myo","w"))
-pickle.dump(RESset_side, open("../results/LAM_changing/side","w"))
-pickle.dump(RESset_rnd, open("../results/LAM_changing/rnd","w"))
-pickle.dump(RESset_sidernd, open("../results/LAM_changing/sidernd","w"))
-pickle.dump(V_opt_set_bell, open("../results/LAM_changing/V_opt_bell","w"))
-pickle.dump(A_opt_set_bell, open("../results/LAM_changing/A_opt_bell","w"))
+pickle.dump(expnum, open("../results/N_changing/expnum","w"))
+pickle.dump(ParamsSet, open("../results/N_changing/Paramsset","w"))
+pickle.dump(N_list, open("../results/N_changing/xaxis","w"))
+pickle.dump(RESset_bell, open("../results/N_changing/bell","w"))
+pickle.dump(RESset_myo, open("../results/N_changing/myo","w"))
+pickle.dump(RESset_side, open("../results/N_changing/side","w"))
+pickle.dump(RESset_rnd, open("../results/N_changing/rnd","w"))
+pickle.dump(RESset_sidernd, open("../results/N_changing/sidernd","w"))
+pickle.dump(V_opt_set_bell, open("../results/N_changing/V_opt_bell","w"))
+pickle.dump(A_opt_set_bell, open("../results/N_changing/A_opt_bell","w"))
 print "Finished"

@@ -16,9 +16,9 @@ import time
 
 
 
-def max3(inp1,inp2,inp3):
+def min3(inp1,inp2,inp3):
     lis = np.array([inp1, inp2, inp3])
-    return lis.max(), np.argmax(lis)
+    return lis.min(), np.argmin(lis)
 
 
 def L_mat(l1, l2, params):
@@ -26,9 +26,9 @@ def L_mat(l1, l2, params):
     if params.has_key('L_MAT'):
         mat_l = params['L_MAT']
     else:
-        mat_l = [[0.02, 0.29, 0.69],
-                 [0.02, 0.29, 0.69],
-                 [0.02, 0.29, 0.69]]
+        mat_l = [[0.00, 0.30, 0.70],
+                 [0.00, 0.30, 0.70],
+                 [0.00, 0.30, 0.70]]
     
     if (l1 in range(params['L'])) and (l2 in range(params['L'])):
         return mat_l[l1][l2]
@@ -48,43 +48,59 @@ def P_mat(p1, p2, params):
         return 0.0
 
     
-def P_SpatialPoisson_Pure(k, LAM, R_COVERAGE):
-    return np.exp(-1*math.pi*LAM*np.power(R_COVERAGE,2))*np.power(math.pi*LAM*np.power(R_COVERAGE,2), k)/factorial(k)
-
-def GetUpperboundN(LAM, R_COVERAGE):
-    _n = 0
-    _sum = 0.0
-    while 1:
-        _sum = _sum + P_SpatialPoisson_Pure(_n, LAM, R_COVERAGE)
-        _residual = 1.0 - _sum
-        if _residual < 0.0001:
-            return _n + 1, _residual
-        else:
-            _n = _n + 1
-
+# def P_SpatialPoisson_Pure(k, LAM, R_COVERAGE):
+#     return np.exp(-1*math.pi*LAM*np.power(R_COVERAGE,2))*np.power(math.pi*LAM*np.power(R_COVERAGE,2), k)/factorial(k)
+# 
+# def GetUpperboundN(LAM, R_COVERAGE):
+#     _n = 0
+#     _sum = 0.0
+#     while 1:
+#         _sum = _sum + P_SpatialPoisson_Pure(_n, LAM, R_COVERAGE)
+#         _residual = 1.0 - _sum
+#         if _residual < 0.0001:
+#             return _n + 1, _residual
+#         else:
+#             _n = _n + 1
+# 
+# def N_mat(n1, n2, l1, l2, params):
+#     _LAM = params['LAM']
+#     _R_COVERAGE = params['R_COVERAGE']
+#     _N, _residual = GetUpperboundN(_LAM, _R_COVERAGE)
+#     
+#     if (l2 in params['L_NC']) or (l2 in params['L_B']):
+#         if (n1 in range(_N)) and n2==0:
+#             return 1.0
+#         else:
+#             return 0.0
+#     elif l2 in params['L_S']:
+#         if n1 not in range(_N):
+#             return 0.0
+#         else:
+#             if n2 not in range(_N):
+#                 return 0.0
+#             elif n2==_N-1:
+#                 return P_SpatialPoisson_Pure(n2, _LAM, _R_COVERAGE) + _residual
+#             else:
+#                 return P_SpatialPoisson_Pure(n2, _LAM, _R_COVERAGE)        
+#     else:
+#         return 0.0
+    
+# THIS FUNCTION IS ONLY FOR TEMPORARY USE
 def N_mat(n1, n2, l1, l2, params):
-    _LAM = params['LAM']
-    _R_COVERAGE = params['R_COVERAGE']
-    _N, _residual = GetUpperboundN(_LAM, _R_COVERAGE)
     
     if (l2 in params['L_NC']) or (l2 in params['L_B']):
-        if (n1 in range(_N)) and n2==0:
+        if n2==0:
             return 1.0
         else:
             return 0.0
     elif l2 in params['L_S']:
-        if n1 not in range(_N):
-            return 0.0
+        mat_n = [[1.0/(params['N']) for _ in range(params['N'])] for _ in range(params['N'])]
+        if (n1 in range(params['N'])) and (n2 in range(params['N'])):
+            return mat_n[n1][n2]
         else:
-            if n2 not in range(_N):
-                return 0.0
-            elif n2==_N-1:
-                return P_SpatialPoisson_Pure(n2, _LAM, _R_COVERAGE) + _residual
-            else:
-                return P_SpatialPoisson_Pure(n2, _LAM, _R_COVERAGE)        
+            return 0.0
     else:
         return 0.0
-
 
 def E_mat(e1, e2, l1, l2,  act, params):
     eta_prob = 0.85 # prob of succ charging

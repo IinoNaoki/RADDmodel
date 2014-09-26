@@ -1,5 +1,5 @@
 '''
-Created on Sep 8, 2014
+Created on Sep 3, 2014
 
 @author: yzhang28
 '''
@@ -20,8 +20,8 @@ from RADDCore.header import *
 # PARAMETERS
 ############################################
 L = 3
-E = 1 + 5 #6 elements: {0, 1,2,3,4,5}
-# N Changes later
+E = 1 + 5
+N = 1 + 10
 P = 3
 A = 3
 L_NC, L_B, L_S = [0], [1], [2]
@@ -30,13 +30,12 @@ GAM = 0.95
 DELTA = 0.01
 # GAM = 0.80
 # DELTA = 0.1
-# left blank purposely for LAM
 ############################################
 
 
-N_list = [1,2,3,4,5,6,7,8,9,10]
-# N_list = [1,2,3,4,5,6]
-expnum = len(N_list)
+DELAY_WEIGHT_list = [0.0, 0.2, 0.4, 0.6, 0.8,  1.0, 1.2, 1.4, 1.6, 1.8,  2.0]
+# DELAY_WEIGHT_list = [0.0, 0.2, 0.4, 0.6, 0.8,  1.0]
+expnum = len(DELAY_WEIGHT_list)
 
 RND_ROUND = 30
 
@@ -54,14 +53,16 @@ A_opt_set_bell = [None for _ in range(expnum)]
 
 tic = timeit.default_timer()
 
-for ind, n_cur in enumerate(N_list):
+for ind, w_d_cur in enumerate(DELAY_WEIGHT_list):
     print "---- ROUND:", ind+1,
     print "out of", expnum
-    ParamsSet[ind] = {'L': L, 'E': E, 'N': n_cur, 'P': P, \
+#     N = GetUpperboundN(LAM, R_COVERAGE)[0]
+    ParamsSet[ind] = {'L': L, 'E': E, 'N': N, 'P': P, \
                       'A': A, \
                       'L_NC': L_NC, 'L_B': L_B, 'L_S': L_S, \
                       'E_B': E_B, 'E_S': E_S, \
-                      'GAM': GAM, 'DELTA': DELTA
+                      'GAM': GAM, 'DELTA': DELTA, \
+                      'DELAY_WEIGHT': w_d_cur
                       }
     TransProbSet[ind] = BuildTransMatrix_Para(ParamsSet[ind])
     
@@ -74,7 +75,7 @@ for ind, n_cur in enumerate(N_list):
     # Myopic
     V_myo, A_myo = NaiveSolver_Myopic(TransProbSet[ind], ParamsSet[ind])
     RESset_myo[ind] = GetOptResultList(V_myo,A_myo, TransProbSet[ind], ParamsSet[ind])
-     
+      
     # Taking sides
     V_side, A_side = NaiveSolver_Side(TransProbSet[ind], ParamsSet[ind])
     RESset_side[ind] = GetOptResultList(V_side,A_side, TransProbSet[ind], ParamsSet[ind])
@@ -93,7 +94,7 @@ for ind, n_cur in enumerate(N_list):
     for i in range(len(RE)):
         RE[i] = RE[i]*1.0/(1.0*RANDOM_COUNT)
     RESset_rnd[ind] = RE
-    
+
     # Taking sides plus random actions
     RANDOM_COUNT = RND_ROUND
     RE = []
@@ -115,14 +116,14 @@ print "Total time spent: ",
 print toc - tic
     
 print "Dumping...",
-pickle.dump(expnum, open("../results/N_changing/expnum","w"))
-pickle.dump(ParamsSet, open("../results/N_changing/Paramsset","w"))
-pickle.dump(N_list, open("../results/N_changing/xaxis","w"))
-pickle.dump(RESset_bell, open("../results/N_changing/bell","w"))
-pickle.dump(RESset_myo, open("../results/N_changing/myo","w"))
-pickle.dump(RESset_side, open("../results/N_changing/side","w"))
-pickle.dump(RESset_rnd, open("../results/N_changing/rnd","w"))
-pickle.dump(RESset_sidernd, open("../results/N_changing/sidernd","w"))
-pickle.dump(V_opt_set_bell, open("../results/N_changing/V_opt_bell","w"))
-pickle.dump(A_opt_set_bell, open("../results/N_changing/A_opt_bell","w"))
+pickle.dump(expnum, open("../results/WD_changing/expnum","w"))
+pickle.dump(ParamsSet, open("../results/WD_changing/Paramsset","w"))
+pickle.dump(DELAY_WEIGHT_list, open("../results/WD_changing/xaxis","w"))
+pickle.dump(RESset_bell, open("../results/WD_changing/bell","w"))
+pickle.dump(RESset_myo, open("../results/WD_changing/myo","w"))
+pickle.dump(RESset_side, open("../results/WD_changing/side","w"))
+pickle.dump(RESset_rnd, open("../results/WD_changing/rnd","w"))
+pickle.dump(RESset_sidernd, open("../results/WD_changing/sidernd","w"))
+pickle.dump(V_opt_set_bell, open("../results/WD_changing/V_opt_bell","w"))
+pickle.dump(A_opt_set_bell, open("../results/WD_changing/A_opt_bell","w"))
 print "Finished"

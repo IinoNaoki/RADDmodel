@@ -28,14 +28,18 @@ L_NC, L_B, L_S = [0], [1], [2]
 E_B, E_S = 1, 1
 GAM = 0.95
 DELTA = 0.01
-# LAM = 0.005
-# R_COVERAGE = 10.0
+# GAM = 0.80
+# DELTA = 0.1
 ############################################
 
 
 E_list = [1,2,3,4,5,6,7,8,9,10]
+E_list = [2,3,4,5,6,7,8,9,10,11]
+# E_list = [6.7.8]
 E_list_actual = [i-1 for i in E_list]
 expnum = len(E_list)
+
+RND_ROUND = 30
 
 ParamsSet = [None for _ in range(expnum)]
 TransProbSet = [None for _ in range(expnum)]
@@ -63,37 +67,37 @@ for ind, e_cur in enumerate(E_list):
                       }
     TransProbSet[ind] = BuildTransMatrix_Para(ParamsSet[ind])
     
-    # Bellman
-    V_bell, A_bell = BellmanSolver(TransProbSet[ind], ParamsSet[ind])
-    V_opt_set_bell[ind] = V_bell
-    A_opt_set_bell[ind] = A_bell 
-    RESset_bell[ind] = GetOptResultList(V_bell,A_bell, TransProbSet[ind], ParamsSet[ind])
-      
-    # Myopic
-    V_myo, A_myo = NaiveSolver_Myopic(TransProbSet[ind], ParamsSet[ind])
-    RESset_myo[ind] = GetOptResultList(V_myo,A_myo, TransProbSet[ind], ParamsSet[ind])
-      
-    # Taking sides
-    V_side, A_side = NaiveSolver_Side(TransProbSet[ind], ParamsSet[ind])
-    RESset_side[ind] = GetOptResultList(V_side,A_side, TransProbSet[ind], ParamsSet[ind])
-     
-    # rndmzd
-    RANDOM_COUNT = 50
-    RE = []
-    for rcount in range(RANDOM_COUNT):
-        print "RANDOM: %d/%d running..." % (rcount+1,RANDOM_COUNT)
-        V_rnd, A_rnd = NaiveSolver_Rnd(TransProbSet[ind], ParamsSet[ind])
-        RE_rnd = GetOptResultList(V_rnd,A_rnd, TransProbSet[ind], ParamsSet[ind])
-        if rcount == 0:
-            RE = [0.0 for _ in range(len(RE_rnd))]
-        for i in range(len(RE_rnd)):
-            RE[i] = RE[i] + RE_rnd[i]
-    for i in range(len(RE)):
-        RE[i] = RE[i]*1.0/(1.0*RANDOM_COUNT)
-    RESset_rnd[ind] = RE
+#     # Bellman
+#     V_bell, A_bell = BellmanSolver(TransProbSet[ind], ParamsSet[ind])
+#     V_opt_set_bell[ind] = V_bell
+#     A_opt_set_bell[ind] = A_bell 
+#     RESset_bell[ind] = GetOptResultList(V_bell,A_bell, TransProbSet[ind], ParamsSet[ind])
+#       
+#     # Myopic
+#     V_myo, A_myo = NaiveSolver_Myopic(TransProbSet[ind], ParamsSet[ind])
+#     RESset_myo[ind] = GetOptResultList(V_myo,A_myo, TransProbSet[ind], ParamsSet[ind])
+#       
+#     # Taking sides
+#     V_side, A_side = NaiveSolver_Side(TransProbSet[ind], ParamsSet[ind])
+#     RESset_side[ind] = GetOptResultList(V_side,A_side, TransProbSet[ind], ParamsSet[ind])
+#      
+#     # rndmzd
+#     RANDOM_COUNT = RND_ROUND
+#     RE = []
+#     for rcount in range(RANDOM_COUNT):
+#         print "RANDOM: %d/%d running..." % (rcount+1,RANDOM_COUNT)
+#         V_rnd, A_rnd = NaiveSolver_Rnd(TransProbSet[ind], ParamsSet[ind])
+#         RE_rnd = GetOptResultList(V_rnd,A_rnd, TransProbSet[ind], ParamsSet[ind])
+#         if rcount == 0:
+#             RE = [0.0 for _ in range(len(RE_rnd))]
+#         for i in range(len(RE_rnd)):
+#             RE[i] = RE[i] + RE_rnd[i]
+#     for i in range(len(RE)):
+#         RE[i] = RE[i]*1.0/(1.0*RANDOM_COUNT)
+#     RESset_rnd[ind] = RE
 
     # Taking sides plus random actions
-    RANDOM_COUNT = 50
+    RANDOM_COUNT = RND_ROUND
     RE = []
     for rcount in range(RANDOM_COUNT):
         print "SIDELY RANDOM: %d/%d running..." % (rcount+1,RANDOM_COUNT)

@@ -343,41 +343,12 @@ def BuildTransMatrix_Para(params):
     return trans_prob_mat
 
 
-# def BuildTransMatrix(params): # 0,1,2
-#     rangeL = range(params['L'])
-#     rangeE = range(params['E'])
-#     rangeN = range(params['N'])
-#     rangeP = range(params['P'])
-#     rangeA = range(params['A'])
-#     _len_L, _len_E, _len_N, _len_P = params['L'], params['E'], params['N'], params['P'] 
-#     _len_A = params['A']
-#     
-#     trans_prob_mat = np.zeros((_len_L, _len_E, _len_N, _len_P,_len_L, _len_E, _len_N, _len_P,_len_A))
-#     
-#     print 'Building transition matrix...'
-#     
-#     for l1 in rangeL:
-#         for e1 in rangeE:
-#             for n1 in rangeN:
-#                 for p1 in rangeP:
-#                     for l2 in rangeL:
-#                         for e2 in rangeE:
-#                             for n2 in rangeN:
-#                                 for p2 in rangeP:
-#                                     for act in rangeA:
-# #                                         math.factorial(500)
-#                                         trans_prob_mat[l1][e1][n1][p1][l2][e2][n2][p2][act] = OverallTransProb(l1,e1,n1,p1, l2,e2,n2,p2, act, params)
-#     
-#     print 'Building transition matrix...[DONE]'
-#     return trans_prob_mat
-
-
 def SteadyStateMatrix(transmat, optA, params):
     rangeL, rangeE, rangeN, rangeP = range(params['L']), range(params['E']), range(params['N']), range(params['P'])
     total_dim = params['L'] * params['E'] * params['N'] * params['P']
     expanded_matrix = np.matrix( [[0.0 for _ in range(total_dim)] for _ in range(total_dim)] )
     search_list = [[[[-1 for _ in rangeP] for _ in rangeN] for _ in rangeE] for _ in rangeL]
-    
+
     expd_x_ind, expd_y_ind = 0, 0
     for l1 in rangeL:
         for e1 in rangeE:
@@ -401,7 +372,7 @@ def SteadyStateMatrix(transmat, optA, params):
     a_rhs[total_dim-1] = 1.0
     steady_p = a_rhs * p_hat.getI()
     steady_p_transf = [[[[-1 for _ in rangeP] for _ in rangeN] for _ in rangeE] for _ in rangeL]
-    
+
     for l in rangeL:
         for e in rangeE:
             for n in rangeN:
@@ -443,4 +414,3 @@ def GetOptResultList(V,A, transmat, params):
     
     return v_avg, a1_steady, a2_steady, e_steady, QoS_steady
 #            0       1           2         3          4
-

@@ -23,14 +23,22 @@ def ImmediateCost(l1,e1,n1,p1, act, params):
     else:
         Price_Func = [0.1, 1.0, 5.0]
         
+    if params.has_key('DELAY_WEIGHT'):
+        w_d = params['DELAY_WEIGHT']
+    else:
+        w_d = 1.0
+    
+    Delay = 1.0*w_d*e1
+    Revenue = 1.0*params['E_S'] * n1
+    ContentPrice = 1.0*params['E_B'] * Price_Func[p1]
     
     if (l1 in params['L_B']) and (act==1):
-        return 1.0*e1 + 1.0*params['E_B'] * Price_Func[p1]
+        return Delay + ContentPrice
     elif (l1 in params['L_S']) and (e1>=params['E_S']) and (act==2):
         # 2.0 is a price
-        return 1.0*e1 - 1.0*params['E_S'] * n1
+        return Delay - Revenue
     else:
-        return 0.0
+        return Delay
     
 
 def BellmanSolver(TransProb, params):
